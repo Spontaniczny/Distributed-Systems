@@ -24,7 +24,7 @@ public class JavaUdpServer {
                 InetAddress senderAddress = receivePacket.getAddress();
                 System.out.println("received message from: " + senderAddress.toString());
 
-                // print sent message
+                // print received message
                 String msg = new String(receivePacket.getData());
                 System.out.println("received msg: " + msg);
 
