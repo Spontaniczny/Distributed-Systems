@@ -2,25 +2,27 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.Scanner;
 
 public class Client {
     int portNumber;
+    int portMulticastNumber;
     String hostName;
+    String multicastAddress;
     Socket socket = null;
     PrintWriter out;
     Thread listener;
     Thread udpListener;
+    Thread multicastListener;
     DatagramSocket socketUDP;
 
-    public Client(int portNumber, String hostName){
+    public Client(int portNumber, int portMulticastNumber, String hostName, String multicastAddress){
         System.out.println("JAVA CLIENT");
         this.portNumber = portNumber;
         this.hostName = hostName;
+        this.portMulticastNumber = portMulticastNumber;
+        this.multicastAddress = multicastAddress;
     }
 
     public void connectToServer() throws IOException {
@@ -28,6 +30,7 @@ public class Client {
     }
 
     public void startChatting() throws IOException {
+        createMulticastListener();
         createUDPListener();
         createTCPListener();
     }
@@ -50,7 +53,12 @@ public class Client {
         udpListener.start();
     }
 
-    public void messageAction(String msg, PrintWriter out){
+    public void createMulticastListener(){
+        multicastListener = new ClientMulticastListener(portMulticastNumber, multicastAddress);
+        multicastListener.start();
+    }
+
+    public void messageAction(String msg, PrintWriter out) throws UnknownHostException {
         if (msg.equals("U")){
             System.out.println("NEXT MESSAGE WILL BE SENT VIA UDP.");
             DatagramSocket socketUDP = null;
@@ -79,14 +87,31 @@ public class Client {
                 e.printStackTrace();
             }
         } else if (msg.equals("M")) {
-            System.out.println("XDddD");
+            System.out.println("NEXT MESSAGE WILL BE SENT IN MULTICAST.");
+            MulticastSocket socketMulticastUDP = null;
+
+            try {
+                socketMulticastUDP = new MulticastSocket();
+                InetAddress address = InetAddress.getByName(multicastAddress);
+
+                Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+                String message = myObj.nextLine();  // Read user input
+
+                byte[] sendBuffer = message.getBytes();
+
+                // send message to server
+                DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, portMulticastNumber);
+                socketMulticastUDP.send(sendPacket);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         else {
             out.println(msg);
         }
     }
     public static void main(String[] args) throws IOException {
-        Client client = new Client(9008, "localhost");
+        Client client = new Client(9008, 9009,"localhost", "230.0.0.0");
         try {
             client.connectToServer();
             client.startChatting();
