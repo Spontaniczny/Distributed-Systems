@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Check Weather</title>
+    </head>
+    <body style="text-align: center;">
+        <h1>Check Weather</h1>
+        <div style="display: inline-block; text-align: left;">
+            <form action="/results" method="post">
+                <label for="city">Enter city name:</label><br>
+                <input type="text" id="city" name="city"><br>
+                <label for="start_date">Enter start date:</label><br>
+                <input type="date" id="start_date" name="start_date" value="{start_date}"><br>
+                <label for="end_date">Enter end date:</label><br>
+                <input type="date" id="end_date" name="end_date" value="{end_date}"><br>
+                <label for="password">Enter password:</label><br>
+                <input type="password" id="password" name="password"><br>
+                <input type="submit" value="Check Weather">
+            </form>
+        </div>
+    </body>
+</html>
