@@ -26,7 +26,6 @@ async def get_basic_form(request: Request):
 @app.post('/results', response_class=HTMLResponse, status_code=202)
 async def post_form(request: Request, city: str = Form(None), start_date: str = Form(None),
                     end_date: str = Form(None), password: str = Form(None)):
-
     if password != PASSWORD:
         error_html = "<h1>Error: Authorization Failed</h1><p>Wrong password</p>"
         return HTMLResponse(content=error_html, status_code=401)
@@ -47,8 +46,6 @@ async def post_form(request: Request, city: str = Form(None), start_date: str = 
 
     try:
         current_data = get_current_weather(city)
-        if isinstance(current_data, HTMLResponse):
-            return current_data
 
         temperature_current_celsius = current_data["main"]["temp"] - 273.15
         humidity_current = current_data["main"]["humidity"]
@@ -66,49 +63,43 @@ async def post_form(request: Request, city: str = Form(None), start_date: str = 
         return templates.TemplateResponse(request=request, name="results.html", context=context)
 
     except requests.RequestException as e:
-        error_html = f"<h1>External service unavailable :(</h1><p>The external service did not find a response."
-        return HTMLResponse(content=error_html, status_code=503)
+        return HTMLResponse(content=f"<h1>External service unavailable</h1><p>The external service did not find a response.", status_code=503)
     except KeyError as e:
-        error_html = f"<h1>Data not found</h1><p>{e}</p>"
-        return HTMLResponse(content=error_html, status_code=404)
+        return HTMLResponse(content=f"<h1>Data not found</h1><p>{e}</p>", status_code=404)
     except ValueError as e:
-        error_html = f"<h1>Error</h1><p>{e}</p>>"
-        return HTMLResponse(content=error_html, status_code=404)
+        return HTMLResponse(content=f"<h1>Error</h1><p>{e}</p>>", status_code=404)
     except HTTPException as e:
-        error_html = f"<h1>Client error {e.status_code}</h1><p>{e.detail}</p>"
-        return HTMLResponse(content=error_html, status_code=e.status_code)
+        return HTMLResponse(content=f"<h1>Client error {e.status_code}</h1><p>{e.detail}</p>", status_code=e.status_code)
     except Exception as e:
-        error_html = f"<h1>Internal server error</h1><p>{str(e)}</p>"
-        return HTMLResponse(content=error_html, status_code=500)
+        return HTMLResponse(content=f"<h1>Internal server error</h1><p>{str(e)}</p>", status_code=500)
 
 
-def get_current_weather(city: str):
+def get_current_weather(city):
     response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?appid={OW_API_KEY}&q={city}")
-    try:
-        response.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        if response.status_code == 404:
-            error_html = f"<h1>Error: City {city} not found</h1><p>{e}</p>"
-            return HTMLResponse(content=error_html, status_code=404)
+    if response.status_code == 404:
+        raise HTTPException(status_code=404, detail=f"<h1>Error: City {city} not found</h1>")
     return response.json()
 
 
-def check_date_range(start_date: str, end_date: str):
-    try:
-        start_datetime = datetime.datetime.fromisoformat(start_date)
-        end_datetime = datetime.datetime.fromisoformat(end_date)
-        if start_datetime > end_datetime:
-            raise ValueError("Start date cannot be later than end date")
-        elif start_datetime == end_datetime:
-            raise ValueError("Start day must be earlier that end day")
-        elif start_datetime > datetime.datetime.now():
-            raise ValueError("Start date cannot be in the future")
-        elif end_datetime > datetime.datetime.now():
-            raise ValueError("End date cannot be in the future")
-
-    except ValueError as e:
-        error_html = f"<h1>Error: Invalid date format or start date later than end date</h1><p>{e}</p>"
-        return HTMLResponse(content=error_html, status_code=400)
+def check_date_range(start_date, end_date):
+    start_datetime = datetime.datetime.fromisoformat(start_date)
+    end_datetime = datetime.datetime.fromisoformat(end_date)
+    if start_datetime > end_datetime:
+        return HTMLResponse(content=f"<h1>Error: Invalid date format or start date later than end date</h1>"
+                                    f"<p>Start date cannot be later than end date</p>",
+                            status_code=400)
+    elif start_datetime == end_datetime:
+        return HTMLResponse(content=f"<h1>Error: Invalid date format or start date later than end date</h1>"
+                                    f"<p>Start day must be earlier that end day</p>",
+                            status_code=400)
+    elif start_datetime > datetime.datetime.now():
+        return HTMLResponse(content=f"<h1>Error: Invalid date format or start date later than end date</h1>"
+                                    f"<p>Start date cannot be in the future</p>",
+                            status_code=400)
+    elif end_datetime > datetime.datetime.now():
+        return HTMLResponse(content=f"<h1>Error: Invalid date format or start date later than end date</h1>"
+                                    f"<p>End date cannot be in the future</p>",
+                            status_code=400)
 
 
 def calculate_average_temperature_and_humidity(om_weather, vc_weather):
