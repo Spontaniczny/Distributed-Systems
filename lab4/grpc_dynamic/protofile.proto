@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package protofile;
+
+service ProtoFile {
+    rpc Add(AddRequest) returns (AddResponse) {}
+    rpc Concatenate(ConcatenateRequest) returns (ConcatenateResponse) {}
+    rpc CombineSets(CombineSetsRequest) returns (CombineSetsResponse) {}
+}
+
+message CombineSetsRequest {
+    repeated Set sets = 1;
+}
+
+message CombineSetsResponse {
+    Set combined_set = 1;
+}
+
+message Set {
+    repeated int32 values = 1;
+}
+
+message AddRequest {
+    int32 num1 = 1;
+    int32 num2 = 2;
+}
+
+message AddResponse {
+    int32 result = 1;
+}
+
+message ConcatenateRequest {
+    string str1 = 1;
+    string str2 = 2;
+}
+
+message ConcatenateResponse {
+    string result = 1;
+}
