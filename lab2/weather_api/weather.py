@@ -1,13 +1,14 @@
 import datetime
 import numpy as np
 from fastapi import FastAPI, Request, HTTPException, Form
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 import httpx
 import asyncio
 import os
 import requests
 from dotenv import load_dotenv
+# import html_to_json
 
 load_dotenv()
 VC_API_KEY = os.getenv("VC_API_KEY")
@@ -26,6 +27,7 @@ async def get_basic_form(request: Request):
 @app.post('/results', response_class=HTMLResponse, status_code=202)
 async def post_form(request: Request, city: str = Form(None), start_date: str = Form(None),
                     end_date: str = Form(None), password: str = Form(None)):
+
     if password != PASSWORD:
         error_html = "<h1>Error: Authorization Failed</h1><p>Wrong password</p>"
         return HTMLResponse(content=error_html, status_code=401)
@@ -59,8 +61,10 @@ async def post_form(request: Request, city: str = Form(None), start_date: str = 
 
         context["temperature_current_celsius"] = f"{temperature_current_celsius:.2f}",
         context["humidity_current"] = humidity_current
+        print(context)
+        return JSONResponse(context)
 
-        return templates.TemplateResponse(request=request, name="results.html", context=context)
+        # return templates.TemplateResponse(request=request, name="results.html", context=context)
 
     except requests.RequestException as e:
         return HTMLResponse(content=f"<h1>External service unavailable</h1><p>The external service did not find a response.", status_code=503)
@@ -75,6 +79,7 @@ async def post_form(request: Request, city: str = Form(None), start_date: str = 
 
 
 def get_current_weather(city):
+    print(f"http://api.openweathermap.org/data/2.5/weather?appid={OW_API_KEY}&q={city}")
     response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?appid={OW_API_KEY}&q={city}")
     if response.status_code == 404:
         raise HTTPException(status_code=404, detail=f"<h1>Error: City {city} not found</h1>")
@@ -143,6 +148,8 @@ async def parse_request(city, latitude, longitude, start_date, end_date):
 
 
 async def fetch_data(city, latitude, longitude, start_date, end_date):
+    print(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&start_date={start_date}&end_date={end_date}&hourly=temperature_2m")
+    print(f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{city}/{start_date}/{end_date}?unitGroup=metric&include=days&key={VC_API_KEY}&contentType=json")
     urls = [
         "https://api.thecatapi.com/v1/images/search",
         f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&start_date={start_date}&end_date={end_date}&hourly=temperature_2m",
