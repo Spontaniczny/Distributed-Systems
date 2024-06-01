@@ -1,0 +1,1 @@
+Daje wam cały lib, zebyście się nie musieli walić z versjami jak ja. Dodatkowo protoc ma wersje 3.19.6 (to chyba UBER ważne)

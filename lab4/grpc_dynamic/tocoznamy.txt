@@ -1,0 +1,105 @@
+protofile.ProtoFile
+name: "protofile.proto"
+package: "protofile"
+message_type {
+  name: "CombineSetsRequest"
+  field {
+    name: "sets"
+    number: 1
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".protofile.Set"
+  }
+}
+message_type {
+  name: "CombineSetsResponse"
+  field {
+    name: "combined_set"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".protofile.Set"
+  }
+}
+message_type {
+  name: "Set"
+  field {
+    name: "values"
+    number: 1
+    label: LABEL_REPEATED
+    type: TYPE_INT32
+  }
+}
+message_type {
+  name: "AddRequest"
+  field {
+    name: "num1"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+  }
+  field {
+    name: "num2"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+  }
+}
+message_type {
+  name: "AddResponse"
+  field {
+    name: "result"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+  }
+}
+message_type {
+  name: "ConcatenateRequest"
+  field {
+    name: "str1"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+  }
+  field {
+    name: "str2"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+  }
+}
+message_type {
+  name: "ConcatenateResponse"
+  field {
+    name: "result"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+  }
+}
+service {
+  name: "ProtoFile"
+  method {
+    name: "Add"
+    input_type: ".protofile.AddRequest"
+    output_type: ".protofile.AddResponse"
+    options {
+    }
+  }
+  method {
+    name: "Concatenate"
+    input_type: ".protofile.ConcatenateRequest"
+    output_type: ".protofile.ConcatenateResponse"
+    options {
+    }
+  }
+  method {
+    name: "CombineSets"
+    input_type: ".protofile.CombineSetsRequest"
+    output_type: ".protofile.CombineSetsResponse"
+    options {
+    }
+  }
+}
+syntax: "proto3"

@@ -31,6 +31,7 @@ def serve():
         protofile_pb2.DESCRIPTOR.services_by_name['ProtoFile'].full_name,
         reflection.SERVICE_NAME,
     )
+    print(SERVICE_NAMES)
     reflection.enable_server_reflection(SERVICE_NAMES, server)
 
     server.add_insecure_port('[::]:50051')
