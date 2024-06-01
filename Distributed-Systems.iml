@@ -8,6 +8,9 @@
       <sourceFolder url="file://$MODULE_DIR$/lab1/tcp&amp;udp&amp;socket_testing/ex2" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lab1/tcp&amp;udp&amp;socket_testing/ex3" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lab1/tcp&amp;udp&amp;socket_testing/ex4" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/lab4/ice_smart_house/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/lab4/ice_smart_house/Ice/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/lab4/ice_smart_house/Ice/lib" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="21" jdkType="JavaSDK" />
