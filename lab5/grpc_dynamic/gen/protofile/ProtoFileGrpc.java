@@ -5,14 +5,14 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
 /**
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.62.2)",
+    value = "by gRPC proto compiler (version 1.48.2)",
     comments = "Source: protofile.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class ProtoFileGrpc {
 
   private ProtoFileGrpc() {}
 
-  public static final java.lang.String SERVICE_NAME = "protofile.ProtoFile";
+  public static final String SERVICE_NAME = "protofile.ProtoFile";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<protofile.Protofile.AddRequest,
@@ -154,46 +154,59 @@ public final class ProtoFileGrpc {
 
   /**
    */
-  public interface AsyncService {
+  public static abstract class ProtoFileImplBase implements io.grpc.BindableService {
 
     /**
      */
-    default void add(protofile.Protofile.AddRequest request,
+    public void add(protofile.Protofile.AddRequest request,
         io.grpc.stub.StreamObserver<protofile.Protofile.AddResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getAddMethod(), responseObserver);
     }
 
     /**
      */
-    default void concatenate(protofile.Protofile.ConcatenateRequest request,
+    public void concatenate(protofile.Protofile.ConcatenateRequest request,
         io.grpc.stub.StreamObserver<protofile.Protofile.ConcatenateResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getConcatenateMethod(), responseObserver);
     }
 
     /**
      */
-    default void combineSets(protofile.Protofile.CombineSetsRequest request,
+    public void combineSets(protofile.Protofile.CombineSetsRequest request,
         io.grpc.stub.StreamObserver<protofile.Protofile.CombineSetsResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCombineSetsMethod(), responseObserver);
     }
-  }
-
-  /**
-   * Base class for the server implementation of the service ProtoFile.
-   */
-  public static abstract class ProtoFileImplBase
-      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
-      return ProtoFileGrpc.bindService(this);
+      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            getAddMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                protofile.Protofile.AddRequest,
+                protofile.Protofile.AddResponse>(
+                  this, METHODID_ADD)))
+          .addMethod(
+            getConcatenateMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                protofile.Protofile.ConcatenateRequest,
+                protofile.Protofile.ConcatenateResponse>(
+                  this, METHODID_CONCATENATE)))
+          .addMethod(
+            getCombineSetsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                protofile.Protofile.CombineSetsRequest,
+                protofile.Protofile.CombineSetsResponse>(
+                  this, METHODID_COMBINE_SETS)))
+          .build();
     }
   }
 
   /**
-   * A stub to allow clients to do asynchronous rpc calls to service ProtoFile.
    */
-  public static final class ProtoFileStub
-      extends io.grpc.stub.AbstractAsyncStub<ProtoFileStub> {
+  public static final class ProtoFileStub extends io.grpc.stub.AbstractAsyncStub<ProtoFileStub> {
     private ProtoFileStub(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
@@ -231,10 +244,8 @@ public final class ProtoFileGrpc {
   }
 
   /**
-   * A stub to allow clients to do synchronous rpc calls to service ProtoFile.
    */
-  public static final class ProtoFileBlockingStub
-      extends io.grpc.stub.AbstractBlockingStub<ProtoFileBlockingStub> {
+  public static final class ProtoFileBlockingStub extends io.grpc.stub.AbstractBlockingStub<ProtoFileBlockingStub> {
     private ProtoFileBlockingStub(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
@@ -269,10 +280,8 @@ public final class ProtoFileGrpc {
   }
 
   /**
-   * A stub to allow clients to do ListenableFuture-style rpc calls to service ProtoFile.
    */
-  public static final class ProtoFileFutureStub
-      extends io.grpc.stub.AbstractFutureStub<ProtoFileFutureStub> {
+  public static final class ProtoFileFutureStub extends io.grpc.stub.AbstractFutureStub<ProtoFileFutureStub> {
     private ProtoFileFutureStub(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
@@ -318,10 +327,10 @@ public final class ProtoFileGrpc {
       io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final AsyncService serviceImpl;
+    private final ProtoFileImplBase serviceImpl;
     private final int methodId;
 
-    MethodHandlers(AsyncService serviceImpl, int methodId) {
+    MethodHandlers(ProtoFileImplBase serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -358,32 +367,6 @@ public final class ProtoFileGrpc {
     }
   }
 
-  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
-    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-        .addMethod(
-          getAddMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
-            new MethodHandlers<
-              protofile.Protofile.AddRequest,
-              protofile.Protofile.AddResponse>(
-                service, METHODID_ADD)))
-        .addMethod(
-          getConcatenateMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
-            new MethodHandlers<
-              protofile.Protofile.ConcatenateRequest,
-              protofile.Protofile.ConcatenateResponse>(
-                service, METHODID_CONCATENATE)))
-        .addMethod(
-          getCombineSetsMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
-            new MethodHandlers<
-              protofile.Protofile.CombineSetsRequest,
-              protofile.Protofile.CombineSetsResponse>(
-                service, METHODID_COMBINE_SETS)))
-        .build();
-  }
-
   private static abstract class ProtoFileBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
     ProtoFileBaseDescriptorSupplier() {}
@@ -407,9 +390,9 @@ public final class ProtoFileGrpc {
   private static final class ProtoFileMethodDescriptorSupplier
       extends ProtoFileBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final java.lang.String methodName;
+    private final String methodName;
 
-    ProtoFileMethodDescriptorSupplier(java.lang.String methodName) {
+    ProtoFileMethodDescriptorSupplier(String methodName) {
       this.methodName = methodName;
     }
 
