@@ -159,3 +159,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 .out/
+/lab6/homework_rabbitmq/out/
+/lab6/lab_rabbitmq/out/
